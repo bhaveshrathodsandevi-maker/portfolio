@@ -947,22 +947,38 @@
     });
   });
 
-  // Contact form -> mailto fallback (static site, no backend)
-  const form = document.getElementById('contactForm');
-  const status = document.getElementById('formStatus');
-  form.addEventListener('submit', function(e){
-    e.preventDefault();
-    const name = document.getElementById('name').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const message = document.getElementById('message').value.trim();
+// Contact form + Google Analytics lead tracking
+const form = document.getElementById('contactForm');
+const status = document.getElementById('formStatus');
 
-    const subject = encodeURIComponent('Portfolio contact from ' + name);
-    const body = encodeURIComponent(message + '\n\n— ' + name + ' (' + email + ')');
-    window.location.href = 'mailto:bhaveshrathod112004@gmail.com?subject=' + subject + '&body=' + body;
+form.addEventListener('submit', function(e){
+  e.preventDefault();
 
-    status.textContent = 'Opening your email client…';
-    status.classList.add('show');
-  });
+  const name = document.getElementById('name').value.trim();
+  const email = document.getElementById('email').value.trim();
+  const message = document.getElementById('message').value.trim();
+
+  // Send lead event to Google Analytics
+  if (typeof gtag === 'function') {
+    gtag('event', 'generate_lead', {
+      method: 'contact_form'
+    });
+  }
+
+  const subject = encodeURIComponent('Portfolio contact from ' + name);
+  const body = encodeURIComponent(
+    message + '\n\n— ' + name + ' (' + email + ')'
+  );
+
+  status.textContent = 'Opening your email client…';
+  status.classList.add('show');
+
+  window.location.href =
+    'mailto:bhaveshrathod112004@gmail.com?subject=' +
+    subject +
+    '&body=' +
+    body;
+});
 
   // Scroll-reveal for sections
   const revealTargets = document.querySelectorAll('section, .exp-card, .project-card, .interest-item, .timeline-step, .edu-item');
