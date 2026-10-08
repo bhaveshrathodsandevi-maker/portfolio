@@ -951,7 +951,7 @@
 const form = document.getElementById('contactForm');
 const status = document.getElementById('formStatus');
 
-form.addEventListener('submit', function(e) {
+form.addEventListener('submit', function (e) {
   e.preventDefault();
 
   const name = document.getElementById('name').value.trim();
@@ -959,13 +959,18 @@ form.addEventListener('submit', function(e) {
   const message = document.getElementById('message').value.trim();
 
   // Send lead event to Google Analytics
-  gtag('event', 'generate_lead', {
-    method: 'contact_form'
-  });
+  if (typeof gtag === 'function') {
+    gtag('event', 'generate_lead', {
+      method: 'contact_form'
+    });
 
-  console.log('generate_lead event sent');
+    console.log('✅ generate_lead event sent');
+  } else {
+    console.error('❌ Google Analytics / gtag is not loaded');
+  }
 
   const subject = encodeURIComponent('Portfolio contact from ' + name);
+
   const body = encodeURIComponent(
     message + '\n\n— ' + name + ' (' + email + ')'
   );
@@ -973,7 +978,7 @@ form.addEventListener('submit', function(e) {
   status.textContent = 'Opening your email client…';
   status.classList.add('show');
 
-  setTimeout(function() {
+  setTimeout(function () {
     window.location.href =
       'mailto:bhaveshrathod112004@gmail.com?subject=' +
       subject +
