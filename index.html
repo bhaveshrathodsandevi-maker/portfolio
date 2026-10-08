@@ -958,29 +958,28 @@ form.addEventListener('submit', function(e) {
   const email = document.getElementById('email').value.trim();
   const message = document.getElementById('message').value.trim();
 
+  // Send lead event to Google Analytics
+  gtag('event', 'generate_lead', {
+    method: 'contact_form'
+  });
+
+  console.log('generate_lead event sent');
+
   const subject = encodeURIComponent('Portfolio contact from ' + name);
   const body = encodeURIComponent(
     message + '\n\n— ' + name + ' (' + email + ')'
   );
 
-  // Send lead event
-  if (typeof gtag === 'function') {
-    gtag('event', 'generate_lead', {
-      method: 'contact_form'
-    });
-  }
-
   status.textContent = 'Opening your email client…';
   status.classList.add('show');
 
-  // Give Google Analytics a moment to send the event
   setTimeout(function() {
     window.location.href =
       'mailto:bhaveshrathod112004@gmail.com?subject=' +
       subject +
       '&body=' +
       body;
-  }, 500);
+  }, 1000);
 });
 
 
